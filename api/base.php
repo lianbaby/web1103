@@ -6,6 +6,12 @@ class DB{
     protected $dsn="mysql:host=localhost;charset=utf8;dbname=db1103";
     protected $table;
     protected $pdo;
+    public $level=[
+        1=>'普遍級',
+        2=>'輔導級',
+        3=>'保護級',
+        4=>'限制級'
+    ];
 
     public function __construct($table)
     {
@@ -149,11 +155,12 @@ function to($url){
 }
 
 function q($sql){
-    $pdo=new PDO("mysql:host=localhost;charset=utf8;dbname=db10",'root','');
+    $pdo=new PDO("mysql:host=localhost;charset=utf8;dbname=db1103",'root','');
     return $pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
 }
 
 
 $Trailer=new DB("trailer");
+$Movie=new DB("movie");
 
 ?>
