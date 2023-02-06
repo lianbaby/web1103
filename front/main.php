@@ -4,12 +4,17 @@
   height: 400px;
   position: relative;
 }
+.lists{
+  width: 210px;
+  height: 280px;
+  position: relative;
+  margin: auto; /*海報維持在正中間 */
+  overflow: hidden;
+}
 
 .pos{
  width: 210px; 
  height: 280px;
- /* background-color: white; */
- margin-left: 105px;
  position: absolute;
  text-align: center;
  display: none;
@@ -23,7 +28,6 @@
 .controls{
   width: 420px;
   height: 110px;
-  /* background-color: lightyellow; */
   margin: 10px auto 0 auto;
   display: flex;
   align-items: center;
@@ -31,12 +35,6 @@
   position: absolute;
   bottom: 0;
 }
-
-/* .left,.right{
-  width: 40px;
-  height: 40px;
-  background-color: red;
-} */
 
 .left,.right{
   /* transparent透明色 */
@@ -54,7 +52,6 @@
 .btns{
   width: 320px;
   height: 100px;
-  /* background-color: green; */
   display: flex;
   overflow: hidden;/*hidden超出範圍的部份*/
 }
@@ -65,6 +62,8 @@
   text-align:center;
   flex-shrink: 0;/*保持設定的寬度，不要跑掉 */
   box-sizing: border-box;
+  position: relative; /*一定要有定位點，否則不能滑動 */
+  padding:3px;
 }
 .btn img{
   width: 100%;
@@ -79,26 +78,24 @@
         <div id="poster">
           <div class="lists">
             <?php
-              $posters=$Trailer->all(['sh'=>1]);
+              $posters=$Trailer->all(['sh'=>1]," order by rank");
               foreach($posters as $poster){
-
-                ?>
-            <div class="pos">
+            ?>
+            <div class="pos" data-ani="<?=$poster['ani'];?>">
               <img src="./upload/<?=$poster['img'];?>" alt="">
+              <div><?=$poster['name'];?></div>
             </div>
             <?php
             }
             ?>
           </div>
           <div class="controls">
-            <div class="left" onclick="pp(1)"> </div>
+            <div class="left"></div>
             <div class="btns">
             <?php
-              $posters=$Trailer->all(['sh'=>1]);
-              foreach($posters as $key => $poster){
-
-                ?>
-              <div class="btn" id="pos<?=$key;?>">
+              foreach($posters as $poster){
+            ?>
+              <div class="btn">
                 <img src="./upload/<?=$poster['img'];?>" alt="">
                 <div><?=$poster['name'];?></div>
               </div>
@@ -106,7 +103,7 @@
               }
               ?>
             </div>
-            <div class="right" onclick="pp(2)"></div>
+            <div class="right"></div>
           </div>
         </div>
       </div>
@@ -115,23 +112,49 @@
     <script> 
       $(".pos").eq(0).show(); //只秀出第一張海報
 
-      var nowpage=0,num=<?=count($posters);?>; //第1題的第二個版。copy過來用(程式要有小修改)
-							function pp(x)
-							{
-								var s,t;
-								if(x==1&&nowpage-1>=0)
-								{nowpage--;}
-								if(x==2 && (nowpage+1)<=(num*1-4)) 
-								{nowpage++;}
-								$(".btn").hide()
-								for(s=0;s<=3;s++)
-								{
-									t=s*1+nowpage*1;
-									$("#pos"+t).show()
-								}
-							}
-							pp(1)
+      let btns=$(".btn").length;
+      let p=0;
+      $(".right,.left").on("click",function(){
+        if($(this).hasClass('left')){
+          p=(p - 1 >= 0)? p-1 : p;
+        }else{
+          p=(p + 1 <= btns - 4)? p+1 : p;
+        }
+        $(".btn").animate({right:80*p});
+      })
+      
+      
+      
+      
+      let now=0;
+      let counter=setInterval(()=>{
+          ani();
+        },3000);
 
+
+      function ani(){
+          now=$(".pos:visible").index();
+          next=(now+1<=$(".pos").length-1)?now+1:0;
+        let AniType=$('.pos').eq(next).data('ani');
+        switch(AniType){
+          case 1:
+              $(".pos").eq(now).fadeOut(1000,()=>{
+                $(".pos").eq(next).fadeIn(1000);
+              });
+          break;
+          case 2:
+              $(".pos").eq(now).hide(1000,()=>{
+                $(".pos").eq(next).show(1000);
+              });
+          break;
+          case 3:
+              $(".pos").eq(now).slideUp(1000,()=>{
+                $(".pos").eq(next).slideDown(1000);
+              });
+          break;
+        }
+      }
+        
     </script>
 
     <div class="half">
