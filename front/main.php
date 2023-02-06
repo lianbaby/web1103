@@ -131,10 +131,20 @@
           ani();
         },3000);
 
+        $(".btn").on("click",function(){
+          let _this=$(this).index();
+          //console.log(now+1,_this);
+          ani(_this);
 
-      function ani(){
-          now=$(".pos:visible").index();
+        })
+
+
+      function ani(next){
+        now=$(".pos:visible").index();
+        if(typeof(next)=='undefined'){
           next=(now+1<=$(".pos").length-1)?now+1:0;
+          }
+
         let AniType=$('.pos').eq(next).data('ani');
         switch(AniType){
           case 1:
@@ -154,7 +164,18 @@
           break;
         }
       }
-        
+      
+
+      $(".btns").hover(
+        function (){
+          clearInterval(counter);
+        },
+        function(){
+          counter=setInterval(()=>{
+            ani();
+          },3000)
+        }
+      )
     </script>
 
     <div class="half">
