@@ -148,24 +148,38 @@
         let AniType=$('.pos').eq(next).data('ani');
         switch(AniType){
           case 1:
-              $(".pos").eq(now).fadeOut(1000,()=>{
-                $(".pos").eq(next).fadeIn(1000);
-              });
+            //淡入淡出
+              $(".pos").eq(now).fadeOut(2000)
+              $(".pos").eq(next).fadeIn(2000);
+              
           break;
           case 2:
-              $(".pos").eq(now).hide(1000,()=>{
-                $(".pos").eq(next).show(1000);
-              });
+            //滑入滑出  
+            $(".pos").eq(now).css({left:210,top:0,width:210,height:280});
+            $(".pos").eq(next).show();
+            $(".pos").eq(now).animate({left:-210,top:0,width:210,height:280},2000,()=>{
+              $(".pos").eq(now).hide();
+              $(".pos").eq(now).css({left:0,top:0,width:210,height:280});
+            });
+            $(".pos").eq(next).animate({left:0,top:0,width:210,height:280},2000);
           break;
           case 3:
-              $(".pos").eq(now).slideUp(1000,()=>{
-                $(".pos").eq(next).slideDown(1000);
-              });
+            //縮放
+            $(".pos").eq(next).css({left:105,top:140,width:0,height:0});
+            $(".pos").eq(now).animate({left:105,top:140,width:0,height:0},1000,()=>{
+              $(".pos").eq(now).hide();
+              $(".pos").eq(now).css({left:0,top:0,width:210,height:280});
+
+              $(".pos").eq(next).show();
+              $(".pos").eq(next).css({left:0,top:0,width:210,height:280});
+            });
+            
           break;
         }
       }
       
 
+      // 滑鼠移過去時，停止動畫(清空計數)，滑鼠移出時，繼續動畫
       $(".btns").hover(
         function (){
           clearInterval(counter);
