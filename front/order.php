@@ -51,7 +51,7 @@ $("#movie").on("change",function(){
 })
 
 $("#day").on("change",function(){
-    getDays($("#movie").val(),$("#day").val());
+    getSessions($("#movie").val(),$("#day").val());
 })
 
     function getBooking(){
