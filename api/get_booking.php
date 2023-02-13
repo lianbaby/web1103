@@ -1,7 +1,16 @@
 <?php
 include_once "base.php";
 
+$orders=$Order->all(['movie'=>$_GET['movie'],'date'=>$_GET['date'],'session'=>$_GET['session']]);
+
 $bookings=[];
+
+foreach($orders as $order){
+    $seats=unserialize($order['seats']);
+    $bookings=array_merge($bookings,$seats);
+}
+
+
 
 ?>
 
@@ -109,11 +118,15 @@ $bookings=[];
 
 
     function checkout(){
-        $.post("./api/order.php",{seats,
-                                  movie:$("#movie option:selected").text(),
-                                  date:$("#day option:selected").val(),
-                                  session:$("#session option:selected").val()})
-    }
+    $.post("./api/order.php",{seats,
+                              movie:$("#movie option:selected").text(),
+                              date:$("#day option:selected").val(),
+                              session:$("#session option:selected").val()},
+                (result)=>{
+                    $("#booking").html(result)
+                }
+            )
+}
 
 
 </script>
